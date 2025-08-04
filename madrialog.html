@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mare Adriaticum Logistics D.O.O.</title>
+    <style>
+        :root {
+            --company-blue: #005ECC;
+            --white: #ffffff;
+            --white-translucent: rgba(255, 255, 255, 0.2);
+            --white-more-translucent: rgba(255, 255, 255, 0.15);
+            --white-semi-translucent: rgba(255, 255, 255, 0.3);
+            --white-half-translucent: rgba(255, 255, 255, 0.5);
+        }
+        
+        body {
+            background-color: var(--company-blue);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 1rem;
+        }
+
+        .logo {
+            width: min(800px, 100vw);
+            margin: 0 auto;
+            margin-right: 420px;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 5px;
+            background: var(--white-translucent);
+            padding: 8px 12px;
+            border-radius: 20px; 
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            border: 1px solid var(--white-more-translucent);
+        }
+
+        .content {
+            text-align: center;
+            width: min(800px, 90vw);
+            margin: 1rem auto;
+            position: relative;
+            min-height: 150px;
+        }
+
+        .content-en, .content-hr {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+        
+        .content-en.active, .content-hr.active {
+            position: relative;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .coming-soon {
+            color: var(--white);
+            font-size: clamp(2.5rem, 6vw, 3rem);
+            margin: 0.5rem 0;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            line-height: 1.2;
+        }
+
+        .contact {
+            color: var(--white);
+            font-size: clamp(1.2rem, 3.5vw, 1.3rem);
+            margin-top: 1rem;
+        }
+
+        .language-btn {
+            color: var(--white);
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .language-btn.active {
+            background: var(--white-semi-translucent);
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        .language-btn:hover {
+            background: var(--white-more-translucent);
+            transform: scale(1.05);
+        }
+
+        .language-separator {
+            color: var(--white-half-translucent);
+            display: flex;
+            align-items: center;
+        }
+
+        .contact a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+            background: var(--white-more-translucent);
+        }
+    </style>
+</head>
+<body>
+    <div class="language-switcher" role="region" aria-label="Language selector">
+        <button class="language-btn" onclick="setLanguage('en', this)">EN</button>
+        <span class="language-separator" aria-hidden="true">|</span>
+        <button class="language-btn" onclick="setLanguage('hr', this)">HR</button>
+    </div>
+
+    <div class="logo">
+        <img src="background.jpg" alt="Mare Adriaticum Logistics Logo">
+    </div>
+
+    <div class="content">
+        <div class="content-en">
+            <h1 class="coming-soon">Coming Soon</h1>
+            <div class="contact">
+                Contact us at: <a href="mailto:maja@madrialog.com">maja@madrialog.com</a>
+            </div>
+        </div>
+
+        <div class="content-hr">
+            <h1 class="coming-soon">Dolazi Uskoro</h1>
+            <div class="contact">
+                Kontaktirajte nas na: <a href="mailto:maja@madrialog.com">maja@madrialog.com</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    const SUPPORTED_LANGUAGES = ['en', 'hr'];
+    let currentLanguage = 'en';
+    
+    document.querySelector('.content-en').classList.add('active');
+    document.querySelector('.language-btn[onclick*="en"]').classList.add('active');
+
+    function setLanguage(lang, buttonElement) {
+        if (!SUPPORTED_LANGUAGES.includes(lang) || lang === currentLanguage) return;
+        
+        // Get elements
+        const currentContent = document.querySelector(`.content-${currentLanguage}`);
+        const newContent = document.querySelector(`.content-${lang}`);
+        
+        // Start transition
+        currentContent.classList.remove('active');
+        newContent.classList.add('active');
+        
+        // Update UI state immediately
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
+        
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        buttonElement.classList.add('active');
+        
+        // Save preference
+        try {
+            localStorage.setItem('language', lang);
+        } catch (e) {
+            console.error("Error saving language preference:", e);
+        }
+    }
+
+    initializeLanguage();
+    </script>
+</body>
+</html>
